@@ -1,5 +1,10 @@
 //React is an open-source JavaScript library which is used for building user interfaces especially for single page applications (SPA) .
 //Created by a Facebook engineer named Jordan Walke.
+//React is all about components
+//Components help for reusability and separation of concerns
+
+//We write code in a declarative component based way
+//Define the desired target states and let React figure out the actual JS DOM instructions
 
 //Features of React
 //JSX - JavaScript Syntax Extension
