@@ -33,3 +33,53 @@ const React_Refresher = () => {
 
 export default React_Refresher;
 
+//Element vs Component
+//Element is a plain object describing what you want to appear on the screen in terms of the DOM nodes or other components. Elements can contain other Elements
+//in their props.
+//Once an element is created it is never mutated.
+
+const element = React.createElement("div", { id: "loginBtn" }, "Login");
+
+const component = ({ onLogin }) => {
+  <div id="loginBtn" onClick={onLogin}>
+    Login
+  </div>;
+};
+
+//Two ways of creating components
+//1. Functional components
+function Greeting({ message }) {
+  return <h1>{`Hello ${message}`}</h1>;
+}
+
+//2. Class component
+class Greeting extends React.Component {
+  render() {
+    return <h1>{`Hello ${this.props.message}`}</h1>;
+  }
+}
+
+//Pure Components
+//React.PureComponent is same as React.Component except that it handles the shouldUpdateComponent() method for us. When props or state changes,
+//PureComponent will do a shallow comparison on both props and state while the regular Component does not. 
+//Hence, the component will re-render by default whenever we call shouldComponentUpdate
+
+//State of a component is an object that holds some information that may change over the lifetime of the component. We should always try to minimize the
+//number of stateful components.
+//State is like a variable in JS
+
+//Updating state
+//You should not update state directly because the component won't re-render
+
+//Props
+//Props are inputs to components. They are single values or objects containing a set of values that are passed to components.
+//The data are passed from the parent component to a child component.
+//Props are like function parameters in JS
+
+//HTML event handling vs React event Handling
+//onclick=doSomething() vs onClick={doSomething} inside doSomething we should always do event.preventDefault()
+
+
+
+
+
