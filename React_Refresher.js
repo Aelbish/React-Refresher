@@ -133,3 +133,28 @@ function App() {
     </div>
   );
 }
+
+//Creating a navbar
+//import {Link} from "react-router-dom"
+function Navbar() {
+  return (
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">MainPage</Link>
+          </li>
+          <li>
+            <Link to="/new">NewPage</Link>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+}
+
+//Adding styling using CSS modules
+//This will create a scope for a specific component by creating a unique id for each styling
+//MainPage.module.css
+//import classes from "./MainPage.module.css"
+//this classes will be an object
