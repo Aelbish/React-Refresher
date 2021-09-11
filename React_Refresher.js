@@ -164,3 +164,16 @@ function Card(props) {
   //children always holds the values that we pass between the wrapper component
   return <div>{props.children}</div>;
 }
+
+//Handling a form submission
+function formSubmitHandler(event) {
+  event.preventDefault();
+  const enteredTitle = titleInputRef.current.value;
+}
+
+//HOOKS
+//useRef hook
+//useRef hook is used to get the value from the inputs
+//import {useRef} from "react";
+//const titleInputRef = useRef();
+//<input type="text" id="title" ref={titleInputRef}/>
