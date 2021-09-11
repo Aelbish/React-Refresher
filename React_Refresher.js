@@ -158,3 +158,9 @@ function Navbar() {
 //MainPage.module.css
 //import classes from "./MainPage.module.css"
 //this classes will be an object
+
+//Creating our wrapper component
+function Card(props) {
+  //children always holds the values that we pass between the wrapper component
+  return <div>{props.children}</div>;
+}
