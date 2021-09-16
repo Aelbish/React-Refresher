@@ -264,6 +264,7 @@ function getData() {
 //We only send requests to the API
 
 //useState is used to maintain local states in functional components
+//setState is asynchronous, you can't expect the updated state value just after the setState
 //import {useState} from "react";
 //const [items, setItems] = useState([]);
 //when we set the state or update the state the component will be re-rendered i.e. the functional component will run again
@@ -287,11 +288,14 @@ function getData() {
 //use push if we want the user to have the ability to return back to the previous page or else use replace. The path or route gose inside ""
 
 //Context in react
+//We could lift the state up i.e. maybe move the userState to for example, App.js and pass the userState as a prop to other components, but
+//in larger applications this might not be a good use case, so we use context.
+//Context is used to to manage state for application wide state.
 //Context is a JS object
 //We generally create a folder called store
 //Here we can create context js files, for example: user-context.js
 //In user-context.js
-import { createContext } from "react";
+import { createContext, useState } from "react";
 //this createContext() takes initial values as argument which could be an object
 //this will be like a blueprint
 const UserContext = createContext({
@@ -300,12 +304,67 @@ const UserContext = createContext({
   email: "",
   favorites: [],
 });
+
+//Note:the part below is like a FUNCTIONAL COMPONENT which will manage a state that will be available to components which ask for it
 //to actually allow other components to use this context we need to create a provider, the provider also allows to update the context by other components
 function UserContextProvider(props) {
-  return <UserContext.Provider>{props.children}</UserContext.Provider>;
+  const [id, setId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [favorties, setFavorties] = useState([]);
+
+  //these functions will allow us to update the context object
+
+  //let us assume that we get a user object as props for the function below
+  function addUser(userObject) {
+    setId(userObject._id);
+    setUserName(userObject.name);
+    setEmail(userObject.email);
+    setFavorties(userObject.favorites);
+  }
+
+  function removeUser() {}
+
+  function addToFavorites(favorite) {
+    //NOTE: VERY IMPORTANT, when the state updating depends on the previous state we should always access the previousState and update on that
+    //When we use useState to update the state, React schedules the state update behind the scenes and may not be instant
+    //Hence if we just did setFavorites(favorites.concat(favorite)) we might not have the latest snapshot of the favorites array which might cause unwanted errors
+    //Hence, we access the previousState and update the array based on the previousStateArray
+    //THIS IS THE BEST PRACTICE TO UPDATE THE STATE BASED ON PREVIOUS STATE
+    setFavorties((prevFavoriteArray) => {
+      return prevFavoriteArray.concat(favorite);
+    });
+  }
+
+  function removeFromFavorites(id) {
+    setFavorties((prevFavoriteArray) => {
+      return prevFavoriteArray.filter((eachFavorite) => {
+        //returns true for all favorites except the one we want to remove, hence the one we want to remove will return false and will be filtered out
+        //of the newly returned array, it does not change the original array
+        eachFavorite.id !== id;
+      });
+    });
+  }
+
+  //Here we are managing or setting the context object based on the states we have managed for different values
+  const context = {
+    //key id and value is state(useState) id
+    id: id,
+    userName: userName,
+    email: email,
+    favorties: favorties,
+  };
+
+  //We pass the managed state i.e. context with value keyword to the components that require this context
+  //Hence if this context i.e. managed application wide state changes all the components using this context will be re-evaluated or re-rendered.
+  return (
+    <UserContext.Provider value={context}>
+      {props.children}
+    </UserContext.Provider>
+  );
 }
 //here we have created something like a wrapper component, hence if we want the entire app to have access to the user context
-//we can wrap <App/> with <UserContextProvider><App/></UserContextProvider>
+//we can wrap <App/> with <UserContextProvider><App/></UserContextProvider> which allows <App/> to listen and interact with this context
 
 //useContext
 //import {useContext} from "react";
