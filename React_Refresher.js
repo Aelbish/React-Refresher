@@ -9,6 +9,9 @@
 //We write code in a declarative component based way
 //Define the desired target states and let React figure out the actual JS DOM instructions
 
+//Website to learn the BASICS, to grasp the basic details, to set up the pillars for REACT
+//https://www.taniarascia.com/getting-started-with-react/
+
 //Features of React
 //JSX - JavaScript Syntax Extension
 //It uses VirtualDOM instead of RealDOM
@@ -24,14 +27,51 @@
 //JSX
 //JSX is a syntax extension to JavaScript. It is used with React to describe what the user interface should look like. We can write HTML structures with JavaScript
 //code.
+//className is used to define class for adding CSS
+//properties and methods are camel-case i.e. onClick instead on onclick
+//{} is used to add JS in JSX
+//functional component is also called simple component, there is class component also which uses render(){return ()}
+
+//Simple component
+//useEffect() with empty dependency can work as componentDidMount to render once, which will work as a replacement for componentDidMount
+const SimpleComponent = () => {
+  return <div>SimpleComponent</div>;
+};
+
+//Class component
+//The lifecycle method componentDidMount is called right after the first render completes.
+class ClassComponent extends React.Component {
+  render() {
+    return <div>ClassComponent</div>;
+  }
+}
+
+//Two ways of creating components
+//1. Functional components
+function Greeting({ message }) {
+  return <h1>{`Hello ${message}`}</h1>;
+}
+
+//2. Class component
+class Greeting extends React.Component {
+  render() {
+    return <h1>{`Hello ${this.props.message}`}</h1>;
+  }
+}
+
+import { array } from "prop-types";
 import React from "react";
 const React_Refresher = (props) => {
+  const propValue = props.text;
   //This is JSX
-  return (
-    <div>
-      <h1>Hello {props.text}</h1>
-    </div>
+  const heading = <h1>Hello, React</h1>;
+  //No JSX, JSX will do this behind the scenes
+  const heading1 = React.createElement(
+    "h1",
+    { className: "someClass" },
+    "Hello, React"
   );
+  return <div>{heading}</div>;
 };
 
 export default React_Refresher;
@@ -51,19 +91,6 @@ const Component = ({ onLogin }) => {
   );
 };
 
-//Two ways of creating components
-//1. Functional components
-function Greeting({ message }) {
-  return <h1>{`Hello ${message}`}</h1>;
-}
-
-//2. Class component
-class Greeting extends React.Component {
-  render() {
-    return <h1>{`Hello ${this.props.message}`}</h1>;
-  }
-}
-
 //Pure Components
 //React.PureComponent is same as React.Component except that it handles the shouldUpdateComponent() method for us. When props or state changes,
 //PureComponent will do a shallow comparison on both props and state while the regular Component does not.
@@ -81,6 +108,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
 //Props
 //Props are inputs to components. They are single values or objects containing a set of values that are passed to components.
 //The data are passed from the parent component to a child component.
+//Props are an effective way to pass existing data to a React component, however the component cannot change the props - they're read-only.
 //Props are like function parameters in JS
 //here we are sending a prop
 <React_Refresher text="World" />;
@@ -92,6 +120,9 @@ const signUpHandler = () => {
 };
 const buttonComponent = () => {
   return <button onClick={signUpHandler}>Sign Up</button>;
+  //The onClick function must pass through a function that returns the prop method, otherwise it will try to run automatically.
+  //if we were trying to execute a function from a prop we would do something like below
+  //return <button onClick = {() => props.someFunction}>Hello</button>
 };
 
 //Synthetic events
@@ -177,3 +208,6 @@ function formSubmitHandler(event) {
 //import {useRef} from "react";
 //const titleInputRef = useRef();
 //<input type="text" id="title" ref={titleInputRef}/>
+
+//You do not directly connect to the database in React due to security reasons, since we can view the React code in the console.
+//We only send requests to the API
