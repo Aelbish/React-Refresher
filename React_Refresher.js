@@ -202,6 +202,45 @@ function formSubmitHandler(event) {
   const enteredTitle = titleInputRef.current.value;
 }
 
+//Fetching Data
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
+function sendData() {
+  fetch("url", {
+    method: "POST",
+    body: JSON.stringify(yourObject),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then(() => {
+      history.replace("/");
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
+
+function getData() {
+  const [loading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
+  //having no dependency i.e. an empty dependency array results to the function inside useEffect get executed only once
+  //that once is when the component is rendered and the function is executed for the first time.
+  //After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
+  useEffect(() => {
+    fetch("url")
+      .then((res) => {
+        //this also returns a promise
+        return res.json();
+      })
+      .then((data) => {
+        setIsLoading(false);
+        setData(data);
+      });
+  }, []);
+}
+
 //HOOKS
 //useRef hook
 //useRef hook is used to get the value from the inputs
@@ -212,5 +251,14 @@ function formSubmitHandler(event) {
 //You do not directly connect to the database in React due to security reasons, since we can view the React code in the console.
 //We only send requests to the API
 
-//useState is used to maintian local states in functional components
+//useState is used to maintain local states in functional components
+//when we set the state or update the state the component will be re-rendered i.e. the functional component will run again
+//Hence, if we are sending a get request without using useEffect with empty dependency, the fetch function will run again
+//and again which will create infinite loop, hence we add the fetch to get data inside useEffect with empty dependency
+
 //useEffect is used to  execute functions after a component is rendered to perform "side effects"
+//having no dependency i.e. an empty dependency array results to the function inside useEffect get executed only once
+//that once is when the component is rendered and the function is executed for the first time.
+//After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
+
+//useHistory hook for re-routing
