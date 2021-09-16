@@ -229,6 +229,7 @@ function getData() {
   //that once is when the component is rendered and the function is executed for the first time.
   //After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
   useEffect(() => {
+    setIsLoading(true);
     fetch("url")
       .then((res) => {
         //this also returns a promise
@@ -236,7 +237,18 @@ function getData() {
       })
       .then((data) => {
         setIsLoading(false);
-        setData(data);
+        //what if we get objects instead of array of objects
+        //Converting objects into array of objects
+        //Example: From firebase, we get objects like {xisSUSKJHD:{property1:"ad", property2:"ad"}}, {ccsUSUHDKDJKL:{property1:"ad", property2:"ad"}}
+        const dataArray = [];
+        for (key in data) {
+          const data = {
+            id: key, //assuming oneData is a key like in Firebase
+            ...data[oneData],
+          };
+          dataArray.push(data);
+        }
+        setData(dataArray);
       });
   }, []);
 }
@@ -252,13 +264,48 @@ function getData() {
 //We only send requests to the API
 
 //useState is used to maintain local states in functional components
+//import {useState} from "react";
+//const [items, setItems] = useState([]);
 //when we set the state or update the state the component will be re-rendered i.e. the functional component will run again
 //Hence, if we are sending a get request without using useEffect with empty dependency, the fetch function will run again
 //and again which will create infinite loop, hence we add the fetch to get data inside useEffect with empty dependency
 
-//useEffect is used to  execute functions after a component is rendered to perform "side effects"
+//useEffect is used to  execute functions after a component is rendered to HANDLE "side effects"
+//import {useEffect} from "react";
+//useEffect(() => {//function}, [dep1, dep2])
 //having no dependency i.e. an empty dependency array results to the function inside useEffect get executed only once
 //that once is when the component is rendered and the function is executed for the first time.
 //After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
+//If we had dependencies useEffect will check if the previous state and the current state of the dependencies has changed and if so will execute the function
+//inside useEffect(() => {}, [dep1, dep2])
+//RULE: Any external values we used inside of the useEffect should be added to the dependency array, however, setState functions are exceptions
 
 //useHistory hook for re-routing
+//import {useHistory} from "react-router-dom";
+//const history = useHistory();
+//history.push("/") or history.replace("/")
+//use push if we want the user to have the ability to return back to the previous page or else use replace. The path or route gose inside ""
+
+//Context in react
+//Context is a JS object
+//We generally create a folder called store
+//Here we can create context js files, for example: user-context.js
+//In user-context.js
+import { createContext } from "react";
+//this createContext() takes initial values as argument which could be an object
+//this will be like a blueprint
+const UserContext = createContext({
+  id: "",
+  userName: "",
+  email: "",
+  favorites: [],
+});
+//to actually allow other components to use this context we need to create a provider, the provider also allows to update the context by other components
+function UserContextProvider(props) {
+  return <UserContext.Provider>{props.children}</UserContext.Provider>;
+}
+//here we have created something like a wrapper component, hence if we want the entire app to have access to the user context
+//we can wrap <App/> with <UserContextProvider><App/></UserContextProvider>
+
+//useContext
+//import {useContext} from "react";
