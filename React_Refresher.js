@@ -211,3 +211,6 @@ function formSubmitHandler(event) {
 
 //You do not directly connect to the database in React due to security reasons, since we can view the React code in the console.
 //We only send requests to the API
+
+//useState is used to maintian local states in functional components
+//useEffect is used to  execute functions after a component is rendered to perform "side effects"
