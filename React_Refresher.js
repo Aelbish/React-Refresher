@@ -59,7 +59,6 @@ class Greeting extends React.Component {
   }
 }
 
-import { array } from "prop-types";
 import React from "react";
 const React_Refresher = (props) => {
   const propValue = props.text;
@@ -303,11 +302,16 @@ const UserContext = createContext({
   userName: "",
   email: "",
   favorites: [],
+  addUser: () => {},
+  removeUser: () => {},
+  addFavorites: () => {},
+  removeFavorites: () => {},
 });
 
 //Note:the part below is like a FUNCTIONAL COMPONENT which will manage a state that will be available to components which ask for it
 //to actually allow other components to use this context we need to create a provider, the provider also allows to update the context by other components
-function UserContextProvider(props) {
+//We export this functional component which will be used by components that need this context
+export function UserContextProvider(props) {
   const [id, setId] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -316,16 +320,21 @@ function UserContextProvider(props) {
   //these functions will allow us to update the context object
 
   //let us assume that we get a user object as props for the function below
-  function addUser(userObject) {
+  function addUserHandler(userObject) {
     setId(userObject._id);
     setUserName(userObject.name);
     setEmail(userObject.email);
     setFavorties(userObject.favorites);
   }
 
-  function removeUser() {}
+  function removeUserHandler() {
+    setId("");
+    setUserName("");
+    setEmail("");
+    setFavorties([]);
+  }
 
-  function addToFavorites(favorite) {
+  function addToFavoritesHandler(favorite) {
     //NOTE: VERY IMPORTANT, when the state updating depends on the previous state we should always access the previousState and update on that
     //When we use useState to update the state, React schedules the state update behind the scenes and may not be instant
     //Hence if we just did setFavorites(favorites.concat(favorite)) we might not have the latest snapshot of the favorites array which might cause unwanted errors
@@ -336,7 +345,7 @@ function UserContextProvider(props) {
     });
   }
 
-  function removeFromFavorites(id) {
+  function removeFromFavoritesHandler(id) {
     setFavorties((prevFavoriteArray) => {
       return prevFavoriteArray.filter((eachFavorite) => {
         //returns true for all favorites except the one we want to remove, hence the one we want to remove will return false and will be filtered out
@@ -353,6 +362,10 @@ function UserContextProvider(props) {
     userName: userName,
     email: email,
     favorties: favorties,
+    addUser: addUserHandler,
+    removeUser: removeUserHandler,
+    addFavorites: addToFavoritesHandler,
+    removeFavorites: removeFromFavoritesHandler,
   };
 
   //We pass the managed state i.e. context with value keyword to the components that require this context
@@ -363,8 +376,25 @@ function UserContextProvider(props) {
     </UserContext.Provider>
   );
 }
+
+export default UserContext;
+//this is the end of the user-context.js file
 //here we have created something like a wrapper component, hence if we want the entire app to have access to the user context
+//import {UserContextProvider} from "path";
 //we can wrap <App/> with <UserContextProvider><App/></UserContextProvider> which allows <App/> to listen and interact with this context
 
 //useContext
 //import {useContext} from "react";
+//import UserContext from "path";
+//NOTE: the above import is the default export of user-context.js not the functional component export
+//this userCtx will contain the context object with the values and functions we have defined 
+ const userCtx = useContext(UserContext);
+//We can access the values like this
+ const userName = userCtx.userName;
+ //using the functions defined in the context
+ function LoginHandler() {
+   userCtx.addUser(passAnObject);
+ }
+ function LogoutHandler() {
+   userCtx.removeUser(passAnId);
+ }
