@@ -32,6 +32,15 @@
 //{} is used to add JS in JSX
 //functional component is also called simple component, there is class component also which uses render(){return ()}
 
+//Two-way binding: Binding the current state with the current input value and vice-versa
+//const [name, setName] = useState("");
+const formSubmitHandler = (event) => {
+  event.preventDefault();
+  setName(event.target.value);
+}
+//<input type="text" id="name" value={name}/>
+//Here we have acheived two-way binding
+
 //Simple component
 //useEffect() with empty dependency can work as componentDidMount to render once, which will work as a replacement for componentDidMount
 const SimpleComponent = () => {
@@ -253,6 +262,7 @@ function getData() {
 }
 
 //HOOKS
+//React hooks can only be used in functional components
 //useRef hook
 //useRef hook is used to get the value from the inputs
 //import {useRef} from "react";
@@ -266,7 +276,15 @@ function getData() {
 //setState is asynchronous, you can't expect the updated state value just after the setState
 //import {useState} from "react";
 //const [items, setItems] = useState([]);
+//useState returns an array with two elements: the current state as the first element of the array and a function to set the state as the second element
 //when we set the state or update the state the component will be re-rendered i.e. the functional component will run again
+//so, the useState will be re-computed, however React manages the state separately from the functional component, so the state will survive the re-render
+//useState is a hook used to manage the state which returns an array with exactly two elements
+//the current state and state updating function
+//whenever the state changes the component is re-rendered i.e. the component will re-run
+//useState will also be re-executed but
+//the state will survive the re-renders since React manages the state separately
+//the useState will manage the state separately so the value of the state won't be lost if re-rendered
 //Hence, if we are sending a get request without using useEffect with empty dependency, the fetch function will run again
 //and again which will create infinite loop, hence we add the fetch to get data inside useEffect with empty dependency
 
@@ -398,3 +416,12 @@ export default UserContext;
  function LogoutHandler() {
    userCtx.removeUser(passAnId);
  }
+ 
+ //React.memo
+ //This is like PureComponent in class component
+ //React.memo() is used to wrap a component which memoized the rendered output of the wrapped component then skips unnecessary renderings
+ //Only re-renders if the props is changed
+ //By default does a shallow comparision
+ //Hence we can pass a second argument with customized function which should return true if prevProps and nextProps are equal
+ const funcComponent = (props) => {}
+ export default funcComponent = React.memo(funcComponent, optionalEqualityCheckerFunction)
