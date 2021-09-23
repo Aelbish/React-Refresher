@@ -277,6 +277,7 @@ function getData() {
 //useRef hook is used to get the value from the inputs
 //import {useRef} from "react";
 //const titleInputRef = useRef();
+//const enteredTitle = titleInputRef.current.value;
 //<input type="text" id="title" ref={titleInputRef}/>
 
 //You do not directly connect to the database in React due to security reasons, since we can view the React code in the console.
@@ -321,6 +322,23 @@ setArrayData((prevData)=>([...prevData.push(1)]))
 //               }}
 //             />
 
+//Consider this code:
+
+//console.log(name); // prints name state, e.g. 'Manu'
+//setName('Max');
+//console.log(name); // ??? what gets printed? 'Max'?
+//You could think that accessing the name state after setName('Max'); should yield the new value (e.g. 'Max') 
+//but this is NOT the case. Keep in mind, that the new state value is only available in the next component 
+//render cycle (which gets scheduled by calling setName()).
+
+//React will batch multiple state updates together to avoid uncessary re-renders
+//for example
+//const clearError = () => {
+//  setError(null);
+// setIsLoading(false);
+//}
+//here, react will batch these two state updates together (if these setStates are synchronous) and the component will not re-render twice
+
 //useEffect is used to  execute functions after a component is rendered to HANDLE "side effects"
 //import {useEffect} from "react";
 //useEffect(() => {//function}, [dep1, dep2])
@@ -331,6 +349,80 @@ setArrayData((prevData)=>([...prevData.push(1)]))
 //If we had dependencies useEffect will check if the previous state and the current state of the dependencies has changed and if so will execute the function
 //inside useEffect(() => {}, [dep1, dep2])
 //RULE: Any external values we used inside of the useEffect should be added to the dependency array, however, setState functions are exceptions
+//we can also add a cleanup function, the cleanup function will run before the useEffect gets executed again if there are dependencies
+//the cleanup function will run when the component gets unmounted if it has an empty array as dependency
+
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       if (searchTitle === inputRef.current.value) {
+//         const query =
+//           searchTitle.length === 0
+//             ? ""
+//             : `?orderBy="title"&equalTo="${searchTitle}"`;
+//         fetch(
+//           "https://react-hooks-practice-cc089-default-rtdb.firebaseio.com/ingredients.json" +
+//             query
+//         )
+//           .then((response) => {
+//             return response.json();
+//           })
+//           .then((responseData) => {
+//             const loadedData = [];
+//             for (const key in responseData) {
+//               loadedData.push({
+//                 id: key,
+//                 title: responseData[key].title,
+//                 amount: responseData[key].amount,
+//               });
+//             }
+//             //when we execute the function below which was passed from Ingredients.js
+//             //we will update the state of the Ingredient.js file, which will re-execute Ingredients component
+//             //Hence, all the functions will be re-created in a different address
+//             //hence, this function inside this useEffect will re-run since onFilteredIngredients changed
+//             //And this cycle will continue for infinity
+//             //Hence, we will use useCallback
+//             onFilteredIngredients(loadedData);
+//           });
+//       }
+//     }, 500);
+//     return () => {clearTimeout(timer)}
+//   }, [searchTitle, onFilteredIngredients, inputRef]);
+
+//useReducer
+//handle complex states
+//handle states that are closely related
+//used to handle multiple state changes, maybe one state needs to change based on the other state change
+//reducer function is defined outside of our component 
+//the reducer function will handle all the conditions for each action.type
+//the reducer funcion takes the current state object as the first arugment and an action typically an object as a second argument
+//const ingredientReducer = (currentIngredients, action) => {
+//if (action.type === "SET") {
+//  return action.ingredients;
+//}
+//else if (action.type === "ADD") {
+//  return [...currentIngredients, action.ingredients];
+//}
+//else if (action.type === "DELETE") {
+//  return currentIngredients.filter((item) => (item.id !== action.id));
+//}
+//else {
+//  return "Something went wrong"
+//}
+//}
+ 
+//then we call the useReducer hook inside the component
+//the useReducer is like a stronger version of useState
+//use reducer also returns an array with two elements like useState()
+//the first element is the current state and the second element is a dispatcher which will be used to dispatch an action
+//the dispatch will allow us to change the state with the help of the reducer function we have defined
+//the dispatch will use the reducer function to "set" the state
+//useReducer takes the reducer function we defined eariler as the first argument, the starting state which is optional as the
+//second argument (the starting state could be an object),
+//const [userIngredients, dispatch] = useReducer(ingredientReducer, []);
+
+//dispatching the action
+//dispatch({type:"SET", ingredients})
+//dispatch({type:"ADD", ingredients:{id:, name:, amount:}})
 
 //useHistory hook for re-routing
 //import {useHistory} from "react-router-dom";
