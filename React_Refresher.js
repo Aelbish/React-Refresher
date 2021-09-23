@@ -37,6 +37,8 @@
 //{} is used to add JS in JSX
 //functional component is also called simple component, there is class component also which uses render(){return ()}
 
+//In-line styling in React: <h1 style={{ color: "red" }}>React Hooks Practice</h1>
+
 //Two-way binding: Binding the current state with the current input value and vice-versa
 //const [name, setName] = useState("");
 const formSubmitHandler = (event) => {
@@ -322,7 +324,8 @@ setArrayData((prevData)=>([...prevData.push(1)]))
 //useEffect is used to  execute functions after a component is rendered to HANDLE "side effects"
 //import {useEffect} from "react";
 //useEffect(() => {//function}, [dep1, dep2])
-//having no dependency i.e. an empty dependency array results to the function inside useEffect get executed only once
+//eliminating dependency array, the function inside the useEffect runs after every component update
+//An empty dependency array results to the function inside useEffect get executed only once, so like componentDidMount
 //that once is when the component is rendered and the function is executed for the first time.
 //After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
 //If we had dependencies useEffect will check if the previous state and the current state of the dependencies has changed and if so will execute the function
@@ -447,6 +450,13 @@ export default UserContext;
  function LogoutHandler() {
    userCtx.removeUser(passAnId);
  }
+ 
+ //useCallback
+//    const filteredIngredients = useCallback((filterededIngredients) => {
+//     setUserIngredients(filteredIngredients);
+//   }, []);
+//useCallback is used to ensure that the function is not re-created when the component is re-rendered
+//refer to Ingredients.js file along with Search.js
  
  //React.memo
  //This is like PureComponent in class component
