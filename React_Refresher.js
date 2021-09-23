@@ -39,6 +39,19 @@
 
 //In-line styling in React: <h1 style={{ color: "red" }}>React Hooks Practice</h1>
 
+//stateful/smart vs stateless/presentation/dumb component
+
+//controlled vs uncontrolled components
+//when we use useRef to get the values from <input> that input is uncontrolled, because the value is not controlled by React
+//A Uncontrolled Component is one that stores its own state internally, 
+//and you query the DOM using a ref to find its current value when you need it. This is a bit more like traditional HTML.
+
+//when we do two way binding with useState on <input> that input is controlled
+//A Controlled Component is one that takes its current value through props and notifies changes through callbacks like onChange. 
+//A parent component "controls" it by handling the callback and managing its own state and passing the new values as props to 
+//the controlled component. You could also call this a "dumb component".
+
+
 //Two-way binding: Binding the current state with the current input value and vice-versa
 //const [name, setName] = useState("");
 const formSubmitHandler = (event) => {
@@ -561,3 +574,17 @@ export default UserContext;
  
  //useMemo and useCallback
  //useCallback for functions, useMemo for values
+ 
+ //custom Hooks
+ //custom hooks allows us to reuse functions, states that are used by several components
+ //NOTE:Each component that utilizes our custom hook will have its own snapshot of the states, the state won't be shared between the components using the same custom hook
+ //Our hook will get called everytime the component using our hook is executed or re-rendered, so we can make a new function inside the useHttp to fetch data
+ //instead of just fetching data inside useHttp. this will ensure that the fetch is not run on every re-render
+ const useHttp = () => {
+ 
+ //we need to return anything probably an object which will allow the components to get access to the useHttp states, functions.
+ return {}
+ }
+ export default useHttp;
+ //using the custom Hook
+ //const {isLoading, httpError, sendRequest} = useHttp();
