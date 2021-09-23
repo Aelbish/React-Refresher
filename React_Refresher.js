@@ -558,3 +558,6 @@ export default UserContext;
  //Hence we can pass a second argument with customized function which should return true if prevProps and nextProps are equal
  const funcComponent = (props) => {}
  export default funcComponent = React.memo(funcComponent, optionalEqualityCheckerFunction)
+ 
+ //useMemo and useCallback
+ //useCallback for functions, useMemo for values
