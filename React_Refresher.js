@@ -24,6 +24,11 @@
 //Follows unidirectional data flow or data binding
 //Uses reusable/composable UI components to develop view.
 
+//Why do we use callback or anonymous functions for event handlers
+//All JavaScript event handlers use an anonymous callback function, 
+//this isn’t a React-specific thing: JS uses callbacks to allow you to do one thing (pick up a click event for example) 
+//then do another thing (fire a handler function). React follows the exact same pattern, as it’s how the language APIs…
+
 //JSX
 //JSX is a syntax extension to JavaScript. It is used with React to describe what the user interface should look like. We can write HTML structures with JavaScript
 //code.
@@ -36,9 +41,8 @@
 //const [name, setName] = useState("");
 const formSubmitHandler = (event) => {
   event.preventDefault();
-  setName(event.target.value);
 }
-//<input type="text" id="name" value={name}/>
+//<input type="text" id="name" value={name} onChange={(event)=> {setName(event.target.value)}}/>
 //Here we have acheived two-way binding
 
 //Simple component
@@ -261,6 +265,10 @@ function getData() {
   }, []);
 }
 
+//Rules for using Hooks
+//1. Hooks should only be used inside functional components or custom hooks
+//2. Always use the hooks in the root level of the component, we cannot use it (useState()) inside a function or if statement
+
 //HOOKS
 //React hooks can only be used in functional components
 //useRef hook
@@ -274,6 +282,11 @@ function getData() {
 
 //useState is used to maintain local states in functional components
 //setState is asynchronous, you can't expect the updated state value just after the setState
+//hence, if we are updating the state based on previous state or our update depends upon the previous state we should access the previous latest snapshot of the state
+const [arrayData, setArrayData] = useState([]);
+
+setArrayData((prevData)=>([...prevData.push(1)]))
+
 //import {useState} from "react";
 //const [items, setItems] = useState([]);
 //useState returns an array with two elements: the current state as the first element of the array and a function to set the state as the second element
@@ -287,6 +300,24 @@ function getData() {
 //the useState will manage the state separately so the value of the state won't be lost if re-rendered
 //Hence, if we are sending a get request without using useEffect with empty dependency, the fetch function will run again
 //and again which will create infinite loop, hence we add the fetch to get data inside useEffect with empty dependency
+
+//             <input
+//               type="number"
+//               id="amount"
+//               value={inputState.amount}
+//               onChange={(event) => {
+//                 //Notice how we have grabbed the event.target.value outside of the setInputState
+//                 //if we had accessed the event.target.value inside setInputState for the amount
+//                 //due to the closure property of JS we would have only gotten the value of the
+//                 //first keystroke
+//                 //React reuses the event objects does not recreate it for every keystroke
+//                 const enteredAmount = event.target.value;
+//                 setInputState((prevState) => ({
+//                   title: prevState.title,
+//                   amount: enteredAmount,
+//                 }));
+//               }}
+//             />
 
 //useEffect is used to  execute functions after a component is rendered to HANDLE "side effects"
 //import {useEffect} from "react";
