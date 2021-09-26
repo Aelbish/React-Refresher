@@ -9,7 +9,7 @@
 //We write code in a declarative component based way
 //Define the desired target states and let React figure out the actual JS DOM instructions
 
-//Website to learn the BASICS, to grasp the basic details, to set up the pillars for REACT
+//Website to revise the BASICS, to grasp the basic details, to set up the pillars for REACT
 //https://www.taniarascia.com/getting-started-with-react/
 
 //Features of React
@@ -398,3 +398,18 @@ export default UserContext;
  function LogoutHandler() {
    userCtx.removeUser(passAnId);
  }
+
+ //Redux
+ //Third party library
+ //State management system for cross-component or app-wide state
+
+ //States in react
+ //1. Local State: state that belongs to a single component, managed internally in a component using useState or useReducer
+ //2. Cross-component state: state that affects multiple components, eg:open/closed state of a modal overlay, this will require "props chain" or "props drilling"
+ //3. App-Wide State: state that affects the entire app(most/all components), eg:user authentication, requires "prop drilling" which can become cumbersome,
+ //hence we used context API
+ //We can also use redux
+
+ //Why use Redux is we can do it with Context API?
+ 
+
