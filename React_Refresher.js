@@ -635,7 +635,17 @@ const redux = require("redux");
 //Hence, reducer function must be pure i.e. for the same input it should spit out the same output
 //we must define a default value for the initial state in the Reducer function
 //else when the reducer function runs for the first time, accessing state.counter would be undefined
-const counterReducer = (state = {counter:0}, action) => {return {counter: state.counter + 1}};
+const counterReducer = (state = {counter:0}, action) => {
+  //we can update the state based on the type of action
+  if (action.type === "increment") {
+    return {counter: state.counter + 1};
+  }
+  if (action.type === "decrement") {
+    return {counter:state.counter - 1};
+  }
+  //default action of the reducer function
+  return state;
+};
 
  //Creating a store in Redux
  //we need to pass the reducer function as the argument for creating store
@@ -657,3 +667,4 @@ store.subscribe(counterSubscriber);
 //action is a JS object with a type property
 //when we run a dispatch it will run the Reducer function to update the state
 store.dispatch({type:"increment"});
+store.dispatch({type:"decrement"});
