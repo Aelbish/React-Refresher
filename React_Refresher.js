@@ -623,3 +623,37 @@ export default UserContext;
  //Redux will forward that action (which describes what to do) to the reducer function to perform the desired changes in the store Data
  //Then the reducer will spit out a new state which will replace the existing state in the Data Store
  //The subscribing components will be notified so that the components can update the UI
+
+ //npm i redux
+//in node
+const redux = require("redux");
+
+//Creating a reducer function
+//Reducer function will spit out the initial state, also mutates the state, reducer function manages the data
+//Reducer function takes in two inputs that are provided by redux: Old state i.e. the current state and Dispatched Action
+//Reducer function always returns a new state object
+//Hence, reducer function must be pure i.e. for the same input it should spit out the same output
+//we must define a default value for the initial state in the Reducer function
+//else when the reducer function runs for the first time, accessing state.counter would be undefined
+const counterReducer = (state = {counter:0}, action) => {return {counter: state.counter + 1}};
+
+ //Creating a store in Redux
+ //we need to pass the reducer function as the argument for creating store
+const store = redux.createStore(counterReducer);
+
+//Subscriber or a component: a function that uses the store data
+const counterSubscriber = () => {
+  //we can get the latest snapshot of the state from the Store with store.getState()
+  const latestState = store.getState();
+  console.log(latestState);
+};
+
+//We need to make Redux aware of the subscriber function, and tell it that the store.getState()
+//from the counterSubscriber needs to be executed whenever there is a state update
+store.subscribe(counterSubscriber);
+
+//method that dispatches an action, the action which will be taken by Reducer function to 
+//update the state
+//action is a JS object with a type property
+//when we run a dispatch it will run the Reducer function to update the state
+store.dispatch({type:"increment"});
