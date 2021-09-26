@@ -555,24 +555,7 @@ export default UserContext;
  function LogoutHandler() {
    userCtx.removeUser(passAnId);
  }
-<<<<<<< HEAD
 
- //Redux
- //Third party library
- //State management system for cross-component or app-wide state
-
- //States in react
- //1. Local State: state that belongs to a single component, managed internally in a component using useState or useReducer
- //2. Cross-component state: state that affects multiple components, eg:open/closed state of a modal overlay, this will require "props chain" or "props drilling"
- //3. App-Wide State: state that affects the entire app(most/all components), eg:user authentication, requires "prop drilling" which can become cumbersome,
- //hence we used context API
- //We can also use redux
-
- //Why use Redux is we can do it with Context API?
- 
-
-=======
- 
  //useCallback
 //    const filteredIngredients = useCallback((filterededIngredients) => {
 //     setUserIngredients(filteredIngredients);
@@ -605,4 +588,16 @@ export default UserContext;
  export default useHttp;
  //using the custom Hook
  //const {isLoading, httpError, sendRequest} = useHttp();
->>>>>>> 09899cbaec6a526a5c89cb15db6b885928da17b3
+
+  //Redux
+ //Third party library
+ //State management system for cross-component or app-wide state
+
+ //States in react
+ //1. Local State: state that belongs to a single component, managed internally in a component using useState or useReducer
+ //2. Cross-component state: state that affects multiple components, eg:open/closed state of a modal overlay, this will require "props chain" or "props drilling"
+ //3. App-Wide State: state that affects the entire app(most/all components), eg:user authentication, requires "prop drilling" which can become cumbersome,
+ //hence we used context API
+ //We can also use redux
+
+ //Why use Redux is we can do it with Context API?
