@@ -607,3 +607,19 @@ export default UserContext;
 
  //We can use Context and Redux together
 
+ //Redux is all about having a central data(state) store. We just have one store which will handle all the app-wide states
+
+ //Components that require the app-wide state will subscribe to the redux store and whenever the data changes Redux store notifies the components and supply the
+ //component with the data, the component gets a slice of Redux store
+
+ //How to change the Redux store data?
+ //NOTE: Components NEVER directly manipulate the data in the store
+ //For changing the Redux store data we use Reducers
+ //Reducer functions will mutate or change the Store Data, this is not useReducer
+
+ //How Redux works?
+ //Components are connected with Reducer functions which will manipulate the Store Data.
+ //Components dispatch Actions, components trigger certain actions
+ //Redux will forward that action (which describes what to do) to the reducer function to perform the desired changes in the store Data
+ //Then the reducer will spit out a new state which will replace the existing state in the Data Store
+ //The subscribing components will be notified so that the components can update the UI
