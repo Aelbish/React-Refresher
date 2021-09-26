@@ -24,6 +24,11 @@
 //Follows unidirectional data flow or data binding
 //Uses reusable/composable UI components to develop view.
 
+//Why do we use callback or anonymous functions for event handlers
+//All JavaScript event handlers use an anonymous callback function, 
+//this isn’t a React-specific thing: JS uses callbacks to allow you to do one thing (pick up a click event for example) 
+//then do another thing (fire a handler function). React follows the exact same pattern, as it’s how the language APIs…
+
 //JSX
 //JSX is a syntax extension to JavaScript. It is used with React to describe what the user interface should look like. We can write HTML structures with JavaScript
 //code.
@@ -31,6 +36,29 @@
 //properties and methods are camel-case i.e. onClick instead on onclick
 //{} is used to add JS in JSX
 //functional component is also called simple component, there is class component also which uses render(){return ()}
+
+//In-line styling in React: <h1 style={{ color: "red" }}>React Hooks Practice</h1>
+
+//stateful/smart vs stateless/presentation/dumb component
+
+//controlled vs uncontrolled components
+//when we use useRef to get the values from <input> that input is uncontrolled, because the value is not controlled by React
+//A Uncontrolled Component is one that stores its own state internally, 
+//and you query the DOM using a ref to find its current value when you need it. This is a bit more like traditional HTML.
+
+//when we do two way binding with useState on <input> that input is controlled
+//A Controlled Component is one that takes its current value through props and notifies changes through callbacks like onChange. 
+//A parent component "controls" it by handling the callback and managing its own state and passing the new values as props to 
+//the controlled component. You could also call this a "dumb component".
+
+
+//Two-way binding: Binding the current state with the current input value and vice-versa
+//const [name, setName] = useState("");
+const formSubmitHandler = (event) => {
+  event.preventDefault();
+}
+//<input type="text" id="name" value={name} onChange={(event)=> {setName(event.target.value)}}/>
+//Here we have acheived two-way binding
 
 //Simple component
 //useEffect() with empty dependency can work as componentDidMount to render once, which will work as a replacement for componentDidMount
@@ -252,11 +280,17 @@ function getData() {
   }, []);
 }
 
+//Rules for using Hooks
+//1. Hooks should only be used inside functional components or custom hooks
+//2. Always use the hooks in the root level of the component, we cannot use it (useState()) inside a function or if statement
+
 //HOOKS
+//React hooks can only be used in functional components
 //useRef hook
 //useRef hook is used to get the value from the inputs
 //import {useRef} from "react";
 //const titleInputRef = useRef();
+//const enteredTitle = titleInputRef.current.value;
 //<input type="text" id="title" ref={titleInputRef}/>
 
 //You do not directly connect to the database in React due to security reasons, since we can view the React code in the console.
@@ -264,21 +298,144 @@ function getData() {
 
 //useState is used to maintain local states in functional components
 //setState is asynchronous, you can't expect the updated state value just after the setState
+//hence, if we are updating the state based on previous state or our update depends upon the previous state we should access the previous latest snapshot of the state
+const [arrayData, setArrayData] = useState([]);
+
+setArrayData((prevData)=>([...prevData.push(1)]))
+
 //import {useState} from "react";
 //const [items, setItems] = useState([]);
+//useState returns an array with two elements: the current state as the first element of the array and a function to set the state as the second element
 //when we set the state or update the state the component will be re-rendered i.e. the functional component will run again
+//so, the useState will be re-computed, however React manages the state separately from the functional component, so the state will survive the re-render
+//useState is a hook used to manage the state which returns an array with exactly two elements
+//the current state and state updating function
+//whenever the state changes the component is re-rendered i.e. the component will re-run
+//useState will also be re-executed but
+//the state will survive the re-renders since React manages the state separately
+//the useState will manage the state separately so the value of the state won't be lost if re-rendered
 //Hence, if we are sending a get request without using useEffect with empty dependency, the fetch function will run again
 //and again which will create infinite loop, hence we add the fetch to get data inside useEffect with empty dependency
+
+//             <input
+//               type="number"
+//               id="amount"
+//               value={inputState.amount}
+//               onChange={(event) => {
+//                 //Notice how we have grabbed the event.target.value outside of the setInputState
+//                 //if we had accessed the event.target.value inside setInputState for the amount
+//                 //due to the closure property of JS we would have only gotten the value of the
+//                 //first keystroke
+//                 //React reuses the event objects does not recreate it for every keystroke
+//                 const enteredAmount = event.target.value;
+//                 setInputState((prevState) => ({
+//                   title: prevState.title,
+//                   amount: enteredAmount,
+//                 }));
+//               }}
+//             />
+
+//Consider this code:
+
+//console.log(name); // prints name state, e.g. 'Manu'
+//setName('Max');
+//console.log(name); // ??? what gets printed? 'Max'?
+//You could think that accessing the name state after setName('Max'); should yield the new value (e.g. 'Max') 
+//but this is NOT the case. Keep in mind, that the new state value is only available in the next component 
+//render cycle (which gets scheduled by calling setName()).
+
+//React will batch multiple state updates together to avoid uncessary re-renders
+//for example
+//const clearError = () => {
+//  setError(null);
+// setIsLoading(false);
+//}
+//here, react will batch these two state updates together (if these setStates are synchronous) and the component will not re-render twice
 
 //useEffect is used to  execute functions after a component is rendered to HANDLE "side effects"
 //import {useEffect} from "react";
 //useEffect(() => {//function}, [dep1, dep2])
-//having no dependency i.e. an empty dependency array results to the function inside useEffect get executed only once
+//eliminating dependency array, the function inside the useEffect runs after every component update
+//An empty dependency array results to the function inside useEffect get executed only once, so like componentDidMount
 //that once is when the component is rendered and the function is executed for the first time.
 //After that the function inside useEffect won't be executed for re-renders if the dependency array is empty
 //If we had dependencies useEffect will check if the previous state and the current state of the dependencies has changed and if so will execute the function
 //inside useEffect(() => {}, [dep1, dep2])
 //RULE: Any external values we used inside of the useEffect should be added to the dependency array, however, setState functions are exceptions
+//we can also add a cleanup function, the cleanup function will run before the useEffect gets executed again if there are dependencies
+//the cleanup function will run when the component gets unmounted if it has an empty array as dependency
+
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       if (searchTitle === inputRef.current.value) {
+//         const query =
+//           searchTitle.length === 0
+//             ? ""
+//             : `?orderBy="title"&equalTo="${searchTitle}"`;
+//         fetch(
+//           "https://react-hooks-practice-cc089-default-rtdb.firebaseio.com/ingredients.json" +
+//             query
+//         )
+//           .then((response) => {
+//             return response.json();
+//           })
+//           .then((responseData) => {
+//             const loadedData = [];
+//             for (const key in responseData) {
+//               loadedData.push({
+//                 id: key,
+//                 title: responseData[key].title,
+//                 amount: responseData[key].amount,
+//               });
+//             }
+//             //when we execute the function below which was passed from Ingredients.js
+//             //we will update the state of the Ingredient.js file, which will re-execute Ingredients component
+//             //Hence, all the functions will be re-created in a different address
+//             //hence, this function inside this useEffect will re-run since onFilteredIngredients changed
+//             //And this cycle will continue for infinity
+//             //Hence, we will use useCallback
+//             onFilteredIngredients(loadedData);
+//           });
+//       }
+//     }, 500);
+//     return () => {clearTimeout(timer)}
+//   }, [searchTitle, onFilteredIngredients, inputRef]);
+
+//useReducer
+//handle complex states
+//handle states that are closely related
+//used to handle multiple state changes, maybe one state needs to change based on the other state change
+//reducer function is defined outside of our component 
+//the reducer function will handle all the conditions for each action.type
+//the reducer funcion takes the current state object as the first arugment and an action typically an object as a second argument
+//const ingredientReducer = (currentIngredients, action) => {
+//if (action.type === "SET") {
+//  return action.ingredients;
+//}
+//else if (action.type === "ADD") {
+//  return [...currentIngredients, action.ingredients];
+//}
+//else if (action.type === "DELETE") {
+//  return currentIngredients.filter((item) => (item.id !== action.id));
+//}
+//else {
+//  return "Something went wrong"
+//}
+//}
+ 
+//then we call the useReducer hook inside the component
+//the useReducer is like a stronger version of useState
+//use reducer also returns an array with two elements like useState()
+//the first element is the current state and the second element is a dispatcher which will be used to dispatch an action
+//the dispatch will allow us to change the state with the help of the reducer function we have defined
+//the dispatch will use the reducer function to "set" the state
+//useReducer takes the reducer function we defined eariler as the first argument, the starting state which is optional as the
+//second argument (the starting state could be an object),
+//const [userIngredients, dispatch] = useReducer(ingredientReducer, []);
+
+//dispatching the action
+//dispatch({type:"SET", ingredients})
+//dispatch({type:"ADD", ingredients:{id:, name:, amount:}})
 
 //useHistory hook for re-routing
 //import {useHistory} from "react-router-dom";
@@ -398,6 +555,7 @@ export default UserContext;
  function LogoutHandler() {
    userCtx.removeUser(passAnId);
  }
+<<<<<<< HEAD
 
  //Redux
  //Third party library
@@ -413,3 +571,38 @@ export default UserContext;
  //Why use Redux is we can do it with Context API?
  
 
+=======
+ 
+ //useCallback
+//    const filteredIngredients = useCallback((filterededIngredients) => {
+//     setUserIngredients(filteredIngredients);
+//   }, []);
+//useCallback is used to ensure that the function is not re-created when the component is re-rendered
+//refer to Ingredients.js file along with Search.js
+ 
+ //React.memo
+ //This is like PureComponent in class component
+ //React.memo() is used to wrap a component which memoized the rendered output of the wrapped component then skips unnecessary renderings
+ //Only re-renders if the props is changed
+ //By default does a shallow comparision
+ //Hence we can pass a second argument with customized function which should return true if prevProps and nextProps are equal
+ const funcComponent = (props) => {}
+ export default funcComponent = React.memo(funcComponent, optionalEqualityCheckerFunction)
+ 
+ //useMemo and useCallback
+ //useCallback for functions, useMemo for values
+ 
+ //custom Hooks
+ //custom hooks allows us to reuse functions, states that are used by several components
+ //NOTE:Each component that utilizes our custom hook will have its own snapshot of the states, the state won't be shared between the components using the same custom hook
+ //Our hook will get called everytime the component using our hook is executed or re-rendered, so we can make a new function inside the useHttp to fetch data
+ //instead of just fetching data inside useHttp. this will ensure that the fetch is not run on every re-render
+ const useHttp = () => {
+ 
+ //we need to return anything probably an object which will allow the components to get access to the useHttp states, functions.
+ return {}
+ }
+ export default useHttp;
+ //using the custom Hook
+ //const {isLoading, httpError, sendRequest} = useHttp();
+>>>>>>> 09899cbaec6a526a5c89cb15db6b885928da17b3
