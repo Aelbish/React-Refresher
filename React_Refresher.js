@@ -601,3 +601,9 @@ export default UserContext;
  //We can also use redux
 
  //Why use Redux is we can do it with Context API?
+ //React context might have POTENTIAL disadvantages
+//1. Using context and managing context can be difficult in a large application, can end up with deeply nested JSX code
+//2. For high frequency changes React context is not good. Can have performance issue
+
+ //We can use Context and Redux together
+
