@@ -668,3 +668,8 @@ store.subscribe(counterSubscriber);
 //when we run a dispatch it will run the Reducer function to update the state
 store.dispatch({type:"increment"});
 store.dispatch({type:"decrement"});
+
+//Fun fact: redux can be used with NOT JUST REACT
+
+//hence to make Redux recognize react we also npm i react-redux
+
