@@ -673,3 +673,35 @@ store.dispatch({type:"decrement"});
 
 //hence to make Redux recognize react we also npm i react-redux
 
+//Example implementation of redux
+//npm i redux react-redux
+
+//we create a folder named store like we did to create a context where we will put the Redux logic
+//index.js
+import {createStore} from "react-redux";
+
+//we need to create a reducer function
+//first argument: currentState, second argument: action
+//we set a default value to the currentState so that when the reducer is executed for the
+//first time we have an inital value, else it would be undefined
+const counterReducer = (currentState={counter:0}, action) => {
+  if (action.type === "INCREMENT") {
+    return {counter: currentState.counter + 1};
+  }
+  if (action.type === "DECREMENT") {
+    return {counter:currentState.counter - 1};
+  }
+
+  //the default action of the reducer function
+  return currentState;
+};
+
+//we create a store, we need to pass the reducer function as an arugment to the store
+//the reducer function will manage the state of our store
+const store = createStore(counterReducer);
+
+export default store;
+//end of index.js
+
+//this store will be providede to the App component which will listen to the state
+//and dispatch a new action if necessary
