@@ -686,6 +686,8 @@ import {createStore} from "redux";
 //first argument: currentState, second argument: action object
 //we set a default value to the currentState so that when the reducer is executed for the
 //first time we have an inital value, else it would be undefined
+//NOTE:our state can have multiple properties
+// {counter:0, show:true}
 const counterReducer = (currentState={counter:0}, action) => {
   if (action.type === "INCREMENT") {
     return {counter: currentState.counter + 1};
@@ -749,7 +751,8 @@ const exampleComponent= () => {
   //class based components to connect the store to the class based component
   //if we are working with functional component, this is not necessary
   const counter = useSelector(state => state.counter);
-
+  //if we had another property we needed to access from the store we will do 
+  const show = useSelector(state => state.show);
   return <div>{counter}</div>;
 }
 
@@ -810,4 +813,20 @@ return (<div>{counter}
   <button onClick = {increaseHandler}>Increase by 5</button>
   <button onClick = {decrementHandler}>Decrement</button>
 </div>);
+}
+
+//we always return a new snapshot of the state and do not merge with the existing state in
+//the reducer function. We always return a new state object, and override the existing state with a new state object
+//Since we are returning a new state we need to make sure we add all the properties again to that state object
+//NOTE: You should never mutate the existing state in the reducer function
+//always access the state and return a new state based on the existing state
+//or else it will create bugs and unpredictable behavior
+
+const counterReducer = (state ={counter:0}, action) => {
+  if (action.type==="INCREMENT") {
+    //YOU SHOULD NEVER DO THE FOLLOWING
+    //Never mutate the existing state
+    //state.counter ++;
+    //return state;
+  }
 }
