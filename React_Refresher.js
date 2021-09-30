@@ -683,7 +683,7 @@ store.dispatch({type:"decrement"});
 import {createStore} from "redux";
 
 //we need to create a reducer function
-//first argument: currentState, second argument: action
+//first argument: currentState, second argument: action object
 //we set a default value to the currentState so that when the reducer is executed for the
 //first time we have an inital value, else it would be undefined
 const counterReducer = (currentState={counter:0}, action) => {
@@ -763,7 +763,8 @@ const exampleComponent= () => {
   const counter = useSelector(state => state.counter);
 
   const incrementHandler = () => {
-    //the function returned by useDispatch() takes in an object with the type of action
+    //the function returned by useDispatch() takes in an action object
+    //the action object can have type property
     dispatch({type:"INCREMENT"});
   };
 
@@ -773,6 +774,40 @@ const exampleComponent= () => {
 
 return (<div>{counter}
   <button onClick = {incrementHandler}>Increment</button>
+  <button onClick = {decrementHandler}>Decrement</button>
+</div>);
+}
+
+//5. Adding action payload
+import {useSelector, useDispatch} from "react-redux";
+const exampleComponent= () => {
+  //the useDispatch returns a function which can be used to dispatch an action
+  const dispatch = useDispatch();
+  const counter = useSelector(state => state.counter);
+
+  const incrementHandler = () => {
+    //the function returned by useDispatch() takes in an action object
+    //the action object can also have payload property which we can give our own name
+    dispatch({type:"INCREMENT"});
+  };
+
+  const increaseHandler = () => {
+    //the function returned by useDispatch() takes in an action object
+    //the action object can also have payload property which we can give our own name
+    //suppose we want to increase our value based on the user input rather than by 1
+    //then we can use a payload to do that
+    //we will access this in the reducer function where we have defined our store
+    // if (action.type==="INCREASE") {return { counter:currentState.counter + action.amount }}
+    dispatch({type:"INCREASE", amount:5})
+  };
+
+  const decrementHandler = () => {
+    dispatch({type:"DECREMENT"});
+  };
+
+return (<div>{counter}
+  <button onClick = {incrementHandler}>Increment</button>
+  <button onClick = {increaseHandler}>Increase by 5</button>
   <button onClick = {decrementHandler}>Decrement</button>
 </div>);
 }
