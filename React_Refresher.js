@@ -679,7 +679,8 @@ store.dispatch({type:"decrement"});
 
 //we create a folder named store like we did to create a context where we will put the Redux logic
 //index.js
-import {createStore} from "react-redux";
+//NOTE: Only here from "redux"
+import {createStore} from "redux";
 
 //we need to create a reducer function
 //first argument: currentState, second argument: action
@@ -707,6 +708,8 @@ export default store;
 //2. Providing the redux store
 //we will go the root component(highest) in the tree components for example, the index.js
 //which renders the app component
+//if we want the store to be available to a specific component we will just import the
+//Provider component and the store component in that component instead of the index.js
 //this store will be provided to the App component which will listen to the state
 //and dispatch a new action if necessary
 //This is a Provider component similar to the one which we created when creating context and
@@ -716,5 +719,36 @@ import {Provider} from "react-redux";
 import store from "./store/index";
 //we wrap the App component with this Provider component
 //now the child of App component and their child will have access to the store
+//those children can listen if the want, dispatch actions if they want
 //Provider component takes a prop named store where we will pass our created store
 ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById("root"));
+
+//3. Using the redux store
+//We have provided the store by wrapping the App component with Provider component
+//now we have to actually use it, the redux team has created a hook useSelector which can be
+//used like the useContext hook to listen and dispatch actions from and to the store
+//i.e. now we have access to the store data using this hook
+//this will be in the component where we want to access the data
+import {useSelector} from "react-redux";
+const exampleComponent= () => {
+  //this useSelector hook created by the redux team is used to access the store data
+  //it takes a function as an argument. that function takes the current state as the argument
+  //from which we can access the current state
+  //this function will be executed by react-redux
+  //useSelector will automatically suscribe our component to the store, so we do not have to do
+  //store.subscribe(exampleComponent)
+  //hence, if the state updates, our component will automatically be re-rendered
+  //useSelector will also automatically remove this component from the subscription
+  //if this component gets unmounted
+  //we used useSelector because it allows us to get a slice of the state
+  //in bigger apps the state might be an object with numerous properties, and we might 
+  //only want specific properties which is possible when using useSelector
+  //we also have useStore hook
+  //we can also import {connect} from "react-redux" which can be used as a wrapper component
+  //connect is a function. it can be used as a wapper component if we are working with 
+  //class based components to connect the store to the class based component
+  //if we are working with functional component, this is not necessary
+  const counter = useSelector(state => state.counter);
+
+  return <div>{counter}</div>;
+}
