@@ -674,6 +674,7 @@ store.dispatch({type:"decrement"});
 //hence to make Redux recognize react we also npm i react-redux
 
 //Example implementation of redux
+//1. Creating a Redux store
 //npm i redux react-redux
 
 //we create a folder named store like we did to create a context where we will put the Redux logic
@@ -703,5 +704,17 @@ const store = createStore(counterReducer);
 export default store;
 //end of index.js
 
-//this store will be providede to the App component which will listen to the state
+//2. Providing the redux store
+//we will go the root component(highest) in the tree components for example, the index.js
+//which renders the app component
+//this store will be provided to the App component which will listen to the state
 //and dispatch a new action if necessary
+//This is a Provider component similar to the one which we created when creating context and
+//the provider
+import {Provider} from "react-redux";
+//we need to import the store we created
+import store from "./store/index";
+//we wrap the App component with this Provider component
+//now the child of App component and their child will have access to the store
+//Provider component takes a prop named store where we will pass our created store
+ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById("root"));
