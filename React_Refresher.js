@@ -752,3 +752,27 @@ const exampleComponent= () => {
 
   return <div>{counter}</div>;
 }
+
+//4. Dispatching an action from the component (subscriber) to update the store
+//useDispatch is the hook used to dispatch the action to the reducer function
+//which will update our store data
+import {useSelector, useDispatch} from "react-redux";
+const exampleComponent= () => {
+  //the useDispatch returns a function which can be used to dispatch an action
+  const dispatch = useDispatch();
+  const counter = useSelector(state => state.counter);
+
+  const incrementHandler = () => {
+    //the function returned by useDispatch() takes in an object with the type of action
+    dispatch({type:"INCREMENT"});
+  };
+
+  const decrementHandler = () => {
+    dispatch({type:"DECREMENT"});
+  };
+
+return (<div>{counter}
+  <button onClick = {incrementHandler}>Increment</button>
+  <button onClick = {decrementHandler}>Decrement</button>
+</div>);
+}
