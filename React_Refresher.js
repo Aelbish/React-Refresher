@@ -167,6 +167,7 @@ const eachItem = list.map((item) => {
   return <li key={item.id}>{item.name}</li>;
 });
 
+//This is react router v5, refer to the docs for v6
 //Adding routing
 //npm i react-router-dom
 //import {BrowserRouter} from "react-router-dom"
